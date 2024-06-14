@@ -1,10 +1,11 @@
 package handler
 
 import (
-	"golang-advance/session-4-unit-test-crud-user/entity"
-	"golang-advance/session-4-unit-test-crud-user/service"
+	"golang-advance/session-5-validator/entity"
+	"golang-advance/session-5-validator/service"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -30,7 +31,9 @@ func NewUserHandler(userService service.IUserService) IUserHandler {
 func (h *UserHandler) CreateUser(c *gin.Context) {
 	var user entity.User
 	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		errMsg := err.Error()
+		errMsg = convertUserMandatoryFieldErrorString(errMsg)
+		c.JSON(http.StatusBadRequest, gin.H{"error": errMsg})
 		return
 	}
 
@@ -63,7 +66,9 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 
 	var user entity.User
 	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		errMsg := err.Error()
+		errMsg = convertUserMandatoryFieldErrorString(errMsg)
+		c.JSON(http.StatusBadRequest, gin.H{"error": errMsg})
 		return
 	}
 
@@ -94,4 +99,14 @@ func (h *UserHandler) DeleteUser(c *gin.Context) {
 func (h *UserHandler) GetAllUsers(c *gin.Context) {
 	users := h.userService.GetAllUsers()
 	c.JSON(http.StatusOK, users)
+}
+
+func convertUserMandatoryFieldErrorString(oldErrorMsg string) string {
+	switch {
+	case strings.Contains(oldErrorMsg, "'Name' failed on the 'required' tag"):
+		return "name is mandatory"
+	case strings.Contains(oldErrorMsg, "'Email' failed on the 'required' tag"):
+		return "email is mandatory"
+	}
+	return oldErrorMsg
 }

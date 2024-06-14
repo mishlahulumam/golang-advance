@@ -1,7 +1,7 @@
 package middleware_test
 
 import (
-	"golang-advance/session-4-unit-test-crud-user/middleware"
+	"golang-advance/session-5-validator/middleware"
 	"net/http"
 	"net/http/httptest"
 	"testing"

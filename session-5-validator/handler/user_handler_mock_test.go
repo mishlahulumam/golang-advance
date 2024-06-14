@@ -2,7 +2,7 @@ package handler_test
 
 import (
 	"errors"
-	"golang-advance/session-4-unit-test-crud-user/entity"
+	"golang-advance/session-5-validator/entity"
 )
 
 type MockUserService struct{}
@@ -14,8 +14,8 @@ var (
 
 func init() {
 	mockUsers = []entity.User{
-		{ID: 1, Name: "User 1", Email: "user1@example.com", Password: "pass1"},
-		{ID: 2, Name: "User 2", Email: "user2@example.com", Password: "pass2"},
+		{ID: 1, Name: "umam", Email: "umam@example.com", Password: "P4ssw0rd"},
+		{ID: 2, Name: "mishlahul", Email: "mishlahul@example.com", Password: "Password**"},
 	}
 	mockNextUserID = 3
 }

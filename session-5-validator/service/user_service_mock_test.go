@@ -1,7 +1,7 @@
 package service_test
 
 import (
-	"golang-advance/session-4-unit-test-crud-user/entity"
+	"golang-advance/session-5-validator/entity"
 	"time"
 )
 

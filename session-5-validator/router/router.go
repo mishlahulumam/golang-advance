@@ -1,8 +1,9 @@
+// package router mengatur rute untuk aplikasi
 package router
 
 import (
-	"golang-advance/session-4-unit-test-crud-user/handler"
-	"golang-advance/session-4-unit-test-crud-user/middleware"
+	"golang-advance/session-5-validator/handler"
+	"golang-advance/session-5-validator/middleware"
 
 	"github.com/gin-gonic/gin"
 )

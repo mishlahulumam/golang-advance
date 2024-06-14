@@ -2,7 +2,7 @@ package service
 
 import (
 	"fmt"
-	"golang-advance/session-4-unit-test-crud-user/entity"
+	"golang-advance/session-5-validator/entity"
 )
 
 type IUserService interface {

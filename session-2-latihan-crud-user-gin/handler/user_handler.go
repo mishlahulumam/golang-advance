@@ -14,7 +14,6 @@ var (
 	nextID int
 )
 
-// Create User
 func CreateUser(c *gin.Context) {
 	var user entity.User
 	if err := c.ShouldBindJSON(&user); err != nil {
@@ -31,7 +30,6 @@ func CreateUser(c *gin.Context) {
 	c.JSON(http.StatusCreated, user)
 }
 
-// Get User by ID
 func GetUser(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -49,7 +47,6 @@ func GetUser(c *gin.Context) {
 	c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 }
 
-// Update User
 func UpdateUser(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -83,7 +80,6 @@ func UpdateUser(c *gin.Context) {
 	c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 }
 
-// Delete User
 func DeleteUser(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -102,7 +98,6 @@ func DeleteUser(c *gin.Context) {
 	c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 }
 
-// Get All Users
 func GetAllUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, users)
 }

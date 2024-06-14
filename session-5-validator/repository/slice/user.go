@@ -1,8 +1,8 @@
 package slice
 
 import (
-	"golang-advance/session-4-unit-test-crud-user/entity"
-	"golang-advance/session-4-unit-test-crud-user/service"
+	"golang-advance/session-5-validator/entity"
+	"golang-advance/session-5-validator/service"
 	"time"
 )
 

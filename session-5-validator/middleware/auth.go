@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"golang-advance/session-5-validator/config"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,11 +16,7 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		const (
-			expectedUsername = "user"
-			expectedPassword = "pass"
-		)
-		isValid := (username == expectedUsername) && (password == expectedPassword)
+		isValid := (username == config.AuthBasicUsername) && (password == config.AuthBasicPassword)
 		if !isValid {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid authorization token"})
 			c.Abort()
