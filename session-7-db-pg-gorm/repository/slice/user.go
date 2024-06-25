@@ -8,13 +8,11 @@ import (
 	"time"
 )
 
-// userRepository adalah implementasi dari IUserRepository yang menggunakan slice untuk menyimpan data pengguna
 type userRepository struct {
-	db     []entity.User // slice untuk menyimpan data pengguna
-	nextID int           // ID berikutnya yang akan digunakan untuk pengguna baru
+	db     []entity.User
+	nextID int
 }
 
-// NewUserRepository membuat instance baru dari userRepository
 func NewUserRepository(db []entity.User) service.IUserRepository {
 	return &userRepository{
 		db: db,

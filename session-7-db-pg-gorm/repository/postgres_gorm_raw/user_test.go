@@ -17,13 +17,11 @@ import (
 )
 
 func setupSQLMock(t *testing.T) (sqlmock.Sqlmock, *gorm.DB) {
-	// Setup SQL mock
 	db, mock, err := sqlmock.New()
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 
-	// Setup GORM with the mock DB
 	gormDB, gormDBErr := gorm.Open(postgres.New(postgres.Config{
 		Conn: db,
 	}), &gorm.Config{SkipDefaultTransaction: true})
@@ -34,17 +32,14 @@ func setupSQLMock(t *testing.T) (sqlmock.Sqlmock, *gorm.DB) {
 }
 
 func TestUserRepository_CreateUser(t *testing.T) {
-	// Setup SQL mock
 	mock, gormDB := setupSQLMock(t)
 
-	// Initialize userRepository with mocked GORM connection
 	userRepo := postgres_gorm_raw.NewUserRepository(gormDB)
 
 	expectedQueryString := regexp.QuoteMeta("INSERT INTO users (name, email, password, created_at, updated_at) " +
 		"VALUES ($1, $2, $3, NOW(), NOW()) RETURNING id")
 
 	t.Run("Positive Case", func(t *testing.T) {
-		// Expected user data to insert
 		user := &entity.User{
 			Name:      "John Doe",
 			Email:     "john.doe@example.com",
@@ -52,16 +47,12 @@ func TestUserRepository_CreateUser(t *testing.T) {
 			UpdatedAt: time.Now(),
 		}
 
-		// Set mock expectations for the transaction
 		mock.ExpectQuery(expectedQueryString).
 			WillReturnRows(sqlmock.NewRows([]string{"id"}).
-				AddRow(1)) // Mock the result of the INSERT operation
-		//mock.ExpectCommit()
+				AddRow(1))
 
-		// Call the CreateUser method
 		createdUser, err := userRepo.CreateUser(context.Background(), user)
 
-		// Assert the result
 		require.NoError(t, err)
 		require.NotNil(t, createdUser.ID)
 		require.Equal(t, user.Name, createdUser.Name)
@@ -69,7 +60,6 @@ func TestUserRepository_CreateUser(t *testing.T) {
 	})
 
 	t.Run("Negative Case", func(t *testing.T) {
-		// Expected user data to insert
 		user := &entity.User{
 			Name:      "John Doe",
 			Email:     "john.doe@example.com",
@@ -77,21 +67,17 @@ func TestUserRepository_CreateUser(t *testing.T) {
 			UpdatedAt: time.Now(),
 		}
 
-		// Set mock expectations for the transaction
 		mock.ExpectQuery(expectedQueryString).
 			WillReturnError(errors.New("db error"))
 
-		// Call the CreateUser method
 		createdUser, err := userRepo.CreateUser(context.Background(), user)
 
-		// Assert the result
 		require.Error(t, err)
 		require.Empty(t, createdUser)
 	})
 }
 
 func TestUserRepository_GetUserByID(t *testing.T) {
-	// Setup SQL mock
 	mock, gormDB := setupSQLMock(t)
 	userRepo := postgres_gorm_raw.NewUserRepository(gormDB)
 
@@ -131,7 +117,6 @@ func TestUserRepository_GetUserByID(t *testing.T) {
 }
 
 func TestUserRepository_UpdateUser(t *testing.T) {
-	// Setup SQL mock
 	mock, gormDB := setupSQLMock(t)
 	userRepo := postgres_gorm_raw.NewUserRepository(gormDB)
 
@@ -171,7 +156,6 @@ func TestUserRepository_UpdateUser(t *testing.T) {
 }
 
 func TestUserRepository_DeleteUser(t *testing.T) {
-	// Setup SQL mock
 	mock, gormDB := setupSQLMock(t)
 	userRepo := postgres_gorm_raw.NewUserRepository(gormDB)
 
@@ -198,7 +182,6 @@ func TestUserRepository_DeleteUser(t *testing.T) {
 }
 
 func TestUserRepository_GetAllUsers(t *testing.T) {
-	// Setup SQL mock
 	mock, gormDB := setupSQLMock(t)
 	userRepo := postgres_gorm_raw.NewUserRepository(gormDB)
 

@@ -61,7 +61,6 @@ func TestUpdateUser(t *testing.T) {
 	require.Equal(t, 1, updatedUser.ID)
 	require.Equal(t, "Updated Name", updatedUser.Name)
 
-	// Check if the user was actually updated
 	updatedUserFromDB, _ := userService.GetUserByID(context.Background(), 1)
 	require.Equal(t, "Updated Name", updatedUserFromDB.Name)
 }
@@ -77,7 +76,6 @@ func TestDeleteUser(t *testing.T) {
 	err := userService.DeleteUser(context.Background(), 1)
 	require.NoError(t, err)
 
-	// Check if the user was actually deleted
 	_, err = userService.GetUserByID(context.Background(), 1)
 	require.Error(t, err)
 	require.Contains(t, err.Error(), "user not found")

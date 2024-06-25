@@ -20,21 +20,13 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	// setup service
 
-	// slice db is disabled. uncomment to enabled
-	// var mockUserDBInSlice []entity.User
-	// _ = slice.NewUserRepository(mockUserDBInSlice)
-
-	// pgx db is enabled. comment to disabled
 	userRepo := postgres_pgx.NewUserRepository(pgxPool)
 	userService := service.NewUserService(userRepo)
 	userHandler := handler.NewUserHandler(userService)
 
-	// Routes
 	router.SetupRouter(r, userHandler)
 
-	// Run the server
 	log.Println("Running server on port 8080")
 	r.Run(":8080")
 }

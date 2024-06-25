@@ -9,9 +9,6 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
-// PgxPoolIface defines a little interface for pgxpool functionality.
-// Since in the real implementation we can use pgxpool.Pool,
-// this interface exists mostly for testing purpose.
 type PgxPoolIface interface {
 	Exec(ctx context.Context, sql string, arguments ...any) (pgconn.CommandTag, error)
 	Query(ctx context.Context, sql string, args ...any) (pgx.Rows, error)

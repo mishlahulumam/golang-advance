@@ -23,20 +23,17 @@ func TestSetupRouter(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	r := gin.Default()
 
-	// Mock middleware to always allow requests for public endpoints
 	r.Use(func(c *gin.Context) {
 		c.Next()
 	})
 
 	router.SetupRouter(r, mockUserHandler)
 
-	// Helper function to create Basic Auth header
 	createBasicAuthHeader := func(user, password string) string {
 		auth := user + ":" + password
 		return "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
 	}
 
-	// Public endpoints
 	t.Run("GetUser", func(t *testing.T) {
 		mockUserHandler.EXPECT().GetUser(gomock.Any())
 
@@ -67,7 +64,6 @@ func TestSetupRouter(t *testing.T) {
 		require.Equal(t, http.StatusOK, resp.Code)
 	})
 
-	// Private endpoints (Unauthorized)
 	t.Run("UnauthorizedCreateUser", func(t *testing.T) {
 		req := httptest.NewRequest(http.MethodPost, "/users", nil)
 		resp := httptest.NewRecorder()
@@ -100,7 +96,6 @@ func TestSetupRouter(t *testing.T) {
 		require.Equal(t, http.StatusUnauthorized, resp.Code)
 	})
 
-	// Private endpoints (Authorized)
 	t.Run("CreateUser", func(t *testing.T) {
 		mockUserHandler.EXPECT().CreateUser(gomock.Any())
 

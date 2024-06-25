@@ -14,7 +14,6 @@ import (
 )
 
 func TestUserRepository_CreateUser(t *testing.T) {
-	// Setup mock DB
 	mock, err := pgxmock.NewPool()
 	if err != nil {
 		t.Fatalf("error opening a stub database connection: %v\n", err)
@@ -24,7 +23,6 @@ func TestUserRepository_CreateUser(t *testing.T) {
 	repo := postgres_pgx.NewUserRepository(mock)
 
 	t.Run("Positive", func(t *testing.T) {
-		// Positive case: Test successful user creation
 		user := &entity.User{
 			Name:     "John Doe",
 			Email:    "john@example.com",
@@ -37,11 +35,10 @@ func TestUserRepository_CreateUser(t *testing.T) {
 		createdUser, err := repo.CreateUser(context.Background(), user)
 		require.NoError(t, err)
 		require.NotNil(t, createdUser.ID)
-		require.Equal(t, "John Doe", createdUser.Name) // Ensure user details are correctly set
+		require.Equal(t, "John Doe", createdUser.Name)
 	})
 
 	t.Run("Negative", func(t *testing.T) {
-		// Negative case: Test database query error
 		user := &entity.User{
 			Name:     "John Doe",
 			Email:    "john@example.com",
@@ -58,7 +55,6 @@ func TestUserRepository_CreateUser(t *testing.T) {
 }
 
 func TestUserRepository_GetUserByID(t *testing.T) {
-	// Setup mock DB
 	mock, err := pgxmock.NewPool()
 	if err != nil {
 		t.Fatalf("error opening a stub database connection: %v\n", err)
@@ -68,7 +64,6 @@ func TestUserRepository_GetUserByID(t *testing.T) {
 	repo := postgres_pgx.NewUserRepository(mock)
 
 	t.Run("Positive", func(t *testing.T) {
-		// Positive case: Test successful retrieval of user by ID
 		expectedUser := entity.User{
 			ID:        1,
 			Name:      "John Doe",
@@ -86,11 +81,9 @@ func TestUserRepository_GetUserByID(t *testing.T) {
 		require.NoError(t, err)
 		require.Equal(t, expectedUser.ID, user.ID)
 		require.Equal(t, expectedUser.Name, user.Name)
-		// Ensure other fields are correctly set
 	})
 
 	t.Run("Negative", func(t *testing.T) {
-		// Negative case: Test error when user is not found
 		nonExistentUserID := 999
 		mock.ExpectQuery(regexp.QuoteMeta("SELECT id, name, email, password, created_at, updated_at FROM users WHERE id = $1")).
 			WithArgs(nonExistentUserID).
@@ -103,7 +96,6 @@ func TestUserRepository_GetUserByID(t *testing.T) {
 }
 
 func TestUserRepository_UpdateUser(t *testing.T) {
-	// Setup mock DB
 	mock, err := pgxmock.NewPool()
 	if err != nil {
 		t.Fatalf("error opening a stub database connection: %v\n", err)
@@ -154,7 +146,6 @@ func TestUserRepository_UpdateUser(t *testing.T) {
 }
 
 func TestUserRepository_DeleteUser(t *testing.T) {
-	// Setup mock DB
 	mock, err := pgxmock.NewPool()
 	if err != nil {
 		t.Fatalf("error opening a stub database connection: %v\n", err)
@@ -186,7 +177,6 @@ func TestUserRepository_DeleteUser(t *testing.T) {
 }
 
 func TestUserRepository_GetAllUsers(t *testing.T) {
-	// Setup mock DB
 	mock, err := pgxmock.NewPool()
 	if err != nil {
 		t.Fatalf("error opening a stub database connection: %v\n", err)

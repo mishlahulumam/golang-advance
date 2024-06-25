@@ -10,7 +10,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// GormDBIface defines an interface for GORM DB methods used in the repository
 type GormDBIface interface {
 	WithContext(ctx context.Context) *gorm.DB
 	Create(value interface{}) *gorm.DB
@@ -24,12 +23,10 @@ type userRepository struct {
 	db GormDBIface
 }
 
-// NewUserRepository membuat instance baru dari userRepository
 func NewUserRepository(db GormDBIface) service.IUserRepository {
 	return &userRepository{db: db}
 }
 
-// CreateUser membuat pengguna baru dalam basis data
 func (r *userRepository) CreateUser(ctx context.Context, user *entity.User) (entity.User, error) {
 	if err := r.db.WithContext(ctx).Create(user).Error; err != nil {
 		log.Printf("Error creating user: %v\n", err)
@@ -38,7 +35,6 @@ func (r *userRepository) CreateUser(ctx context.Context, user *entity.User) (ent
 	return *user, nil
 }
 
-// GetUserByID mengambil pengguna berdasarkan ID
 func (r *userRepository) GetUserByID(ctx context.Context, id int) (entity.User, error) {
 	var user entity.User
 	if err := r.db.WithContext(ctx).Select("id", "name", "email", "password", "created_at", "updated_at").First(&user, id).Error; err != nil {
@@ -51,16 +47,13 @@ func (r *userRepository) GetUserByID(ctx context.Context, id int) (entity.User, 
 	return user, nil
 }
 
-// UpdateUser memperbarui informasi pengguna dalam basis data
 func (r *userRepository) UpdateUser(ctx context.Context, id int, user entity.User) (entity.User, error) {
-	// Menemukan pengguna yang akan diperbarui
 	var existingUser entity.User
 	if err := r.db.WithContext(ctx).Select("id", "name", "email", "password", "created_at", "updated_at").First(&existingUser, id).Error; err != nil {
 		log.Printf("Error finding user to update: %v\n", err)
 		return entity.User{}, err
 	}
 
-	// Memperbarui informasi pengguna
 	existingUser.Name = user.Name
 	existingUser.Email = user.Email
 	if err := r.db.WithContext(ctx).Save(&existingUser).Error; err != nil {
@@ -70,7 +63,6 @@ func (r *userRepository) UpdateUser(ctx context.Context, id int, user entity.Use
 	return existingUser, nil
 }
 
-// DeleteUser menghapus pengguna berdasarkan ID
 func (r *userRepository) DeleteUser(ctx context.Context, id int) error {
 	if err := r.db.WithContext(ctx).Delete(&entity.User{}, id).Error; err != nil {
 		log.Printf("Error deleting user: %v\n", err)
@@ -79,7 +71,6 @@ func (r *userRepository) DeleteUser(ctx context.Context, id int) error {
 	return nil
 }
 
-// GetAllUsers mengambil semua pengguna dari basis data
 func (r *userRepository) GetAllUsers(ctx context.Context) ([]entity.User, error) {
 	var users []entity.User
 	if err := r.db.WithContext(ctx).Select("id", "name", "email", "password", "created_at", "updated_at").Find(&users).Error; err != nil {
