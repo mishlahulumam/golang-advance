@@ -24,8 +24,8 @@ var ctx = context.Background()
 func main() {
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     "redis:6379",
-		Password: "redispass", // no password set
-		DB:       0,           // use default DB
+		Password: "redispass",
+		DB:       0,
 	})
 
 	err := rdb.Set(ctx, "key", "value", 60*time.Second).Err()
@@ -33,19 +33,16 @@ func main() {
 		panic(err)
 	}
 
-	// setup gorm connection
 	dsn := "postgresql://postgres:password@postgres:5433/postgres"
 	gormDB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{SkipDefaultTransaction: true})
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	// uncomment to use postgres gorm
 	urlRepo := repository.NewUrlRepository(gormDB)
 	urlService := service.NewUrlService(urlRepo, rdb)
 	urlHandler := grpcHandler.NewUrlHandler(urlService)
 
-	// Run the grpc server
 	grpcServer := grpc.NewServer()
 	pb.RegisterUrlServiceServer(grpcServer, urlHandler)
 	lis, err := net.Listen("tcp", ":50051")
@@ -58,7 +55,6 @@ func main() {
 	}()
 	time.Sleep(1 * time.Second)
 
-	// Run the grpc gateway
 	conn, err := grpc.NewClient(
 		"0.0.0.0:50051",
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
@@ -71,7 +67,6 @@ func main() {
 		log.Fatalln("Failed to register gateway:", err)
 	}
 
-	// dengan GIN
 	gwServer := gin.Default()
 	gwServer.Group("v1/*{grpc_gateway}").Any("", gin.WrapH(gwmux))
 	log.Println("Running grpc gateway server in port :8080")
